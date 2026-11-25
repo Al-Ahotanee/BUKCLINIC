@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { ShieldCheck, Stethoscope, Siren } from "lucide-react";
-import { Logo } from "@/components/site/logo";
+import { Video, Stethoscope, Siren } from "lucide-react";
+import { Logo, LogoMark } from "@/components/site/logo";
+import { BrandImage } from "@/components/site/brand-image";
+import { BRAND } from "@/lib/brand";
 import { ThemeToggle } from "@/components/site/theme-toggle";
 
 const POINTS = [
   { icon: Stethoscope, text: "See real doctor availability and book a slot in minutes" },
-  { icon: ShieldCheck, text: "Private one-to-one messaging with your doctor" },
+  { icon: Video, text: "Online video consultation and private chat with your doctor" },
   { icon: Siren, text: "Emergencies are always handled in person — booking is for planning ahead" },
 ];
 
@@ -24,11 +26,16 @@ export function AuthShell({
     <div className="flex min-h-screen">
       {/* Brand panel */}
       <aside className="bg-grid relative hidden w-[46%] flex-col justify-between overflow-hidden bg-primary p-10 text-primary-foreground lg:flex">
+        <BrandImage
+          sources={[BRAND.heroLocal, BRAND.heroRemote]}
+          alt=""
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-20 mix-blend-luminosity"
+        />
         <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary-foreground/10 blur-2xl" aria-hidden="true" />
         <div className="pointer-events-none absolute -bottom-32 -left-16 h-96 w-96 rounded-full bg-black/10 blur-2xl" aria-hidden="true" />
         <Link href="/" className="relative inline-flex items-center gap-2.5" aria-label="Back to home">
-          <span className="[&_svg]:fill-primary-foreground [&_svg]:text-primary-foreground/30">
-            <Logo compact />
+          <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white p-1.5 shadow-lg">
+            <LogoMark className="h-full w-auto" />
           </span>
           <span className="flex flex-col leading-tight">
             <span className="text-[15px] font-bold tracking-tight">Bayero University Clinic</span>

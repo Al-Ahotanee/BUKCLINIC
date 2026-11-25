@@ -16,7 +16,6 @@ export function BrandImage({
   const [i, setI] = useState(0);
   if (i >= sources.length) return <>{fallback ?? null}</>;
   return (
-    // eslint-disable-next-line @next/next/no-img-element
     <img src={sources[i]} alt={alt} className={className} loading="lazy" onError={() => setI((n) => n + 1)} />
   );
 }

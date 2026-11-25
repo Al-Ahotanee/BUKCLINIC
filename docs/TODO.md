@@ -13,8 +13,8 @@ Legend: [x] done · [ ] pending · [~] in progress
 - [x] layout.tsx themeColor, icon.svg recoloured
 
 ## Batch 2 — BUK imagery and pages
-- [ ] Landing hero + sections with BUK campus images
-- [ ] Navbar, footer, login/register auth shell use crest + imagery
+- [x] Landing hero + online-consultation band with BUK campus image
+- [x] Auth shell uses crest + campus imagery (navbar/footer inherit new Logo)
 
 ## Batch 3 — Database for consultations
 - [ ] appointments.mode ('in_person' | 'online'), appointments.room, started_at, ended_at

@@ -8,18 +8,20 @@ import {
   Brain,
   CalendarCheck2,
   ClipboardList,
-  FlaskConical,
-  HeartPulse,
+    HeartPulse,
   MessageSquareText,
   ShieldCheck,
   Siren,
   Stethoscope,
   UserRoundPlus,
+  Video,
   Zap,
 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { BRAND } from "@/lib/brand";
+import { BrandImage } from "./brand-image";
 import { LogoMark } from "./logo";
 
 const fadeUp = {
@@ -139,13 +141,13 @@ const STATS = [
   { icon: Zap, value: "Under 2 min", label: "to book an appointment" },
   { icon: CalendarCheck2, value: "24 / 7", label: "online booking, on your schedule" },
   { icon: ShieldCheck, value: "Private", label: "secure accounts, only your doctors see your visits" },
-  { icon: MessageSquareText, value: "Direct", label: "message your doctor — no waiting in line" },
+  { icon: Video, value: "Video", label: "consult your doctor online, from anywhere" },
 ];
 
 const SERVICES = [
   { icon: Stethoscope, title: "General Consultation", desc: "Everyday illnesses, aches, fevers and referrals — see a general practitioner without leaving campus." },
   { icon: Baby, title: "Maternal & Child Health", desc: "Antenatal and postnatal check-ins with clinicians who understand student life." },
-  { icon: FlaskConical, title: "Laboratory & Diagnostics", desc: "Book a consultation first; the clinic coordinates tests and follows up on results." },
+  { icon: Video, title: "Online Video Consultation", desc: "Choose an online visit and meet your doctor on a secure video call — with chat built in. No travel needed." },
   { icon: HeartPulse, title: "Chronic Care Follow-up", desc: "Managing a long-term condition? Keep regular check-ups on schedule with reminders in-app." },
   { icon: Brain, title: "Health & Wellbeing", desc: "Confidential consultations for sleep, stress, and everyday health questions." },
   { icon: Siren, title: "Emergency & First Aid", desc: "Emergencies never need an appointment — walk straight into the clinic during opening hours." },
@@ -201,6 +203,11 @@ export function Landing() {
     <div className="flex min-h-screen flex-col">
       {/* ---------------- Hero ---------------- */}
       <section className="bg-grid relative overflow-hidden">
+        <BrandImage
+          sources={[BRAND.heroLocal, BRAND.heroRemote]}
+          alt=""
+          className="pointer-events-none absolute inset-0 -z-20 h-full w-full object-cover opacity-[0.08] dark:opacity-[0.12]"
+        />
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96 bg-gradient-to-b from-primary/10 to-transparent" />
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-2 lg:gap-8 lg:pb-28 lg:pt-24">
           <motion.div
@@ -217,7 +224,7 @@ export function Landing() {
             </h1>
             <p className="mt-5 max-w-xl text-pretty text-lg text-muted-foreground">
               Skip the queue at the clinic. See which doctors are available today, reserve a time that fits your
-              timetable, and message your doctor — all from your phone.
+              timetable, then meet your doctor in person or on a secure video call — all from your phone.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button asChild size="lg" className="h-12 px-6 text-base font-semibold shadow-lg shadow-primary/25">
@@ -230,7 +237,7 @@ export function Landing() {
               </Button>
             </div>
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
-              {["Free for all BUK students", "Live doctor availability", "Secure one-to-one messaging"].map((t) => (
+              {["Free for all BUK students", "Live doctor availability", "Online video consultation"].map((t) => (
                 <span key={t} className="inline-flex items-center gap-1.5">
                   <ShieldCheck className="h-4 w-4 text-primary" /> {t}
                 </span>
@@ -281,6 +288,39 @@ export function Landing() {
                 <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{s.desc}</p>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- Online consultation band ---------------- */}
+      <section className="border-y border-border/70 bg-card/40">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2">
+          <div className="relative overflow-hidden rounded-2xl border shadow-xl shadow-primary/10">
+            <BrandImage
+              sources={[BRAND.heroLocal, BRAND.heroRemote]}
+              alt="Bayero University Kano campus"
+              className="aspect-[4/3] w-full object-cover"
+              fallback={<div className="aspect-[4/3] w-full bg-gradient-to-br from-primary to-primary/60" />}
+            />
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5 text-white">
+              <p className="text-sm font-semibold">Bayero University, Kano</p>
+              <p className="text-xs text-white/80">{BRAND.motto}</p>
+            </div>
+          </div>
+          <div>
+            <Badge variant="secondary" className="mb-3 px-3 py-1 text-xs font-semibold uppercase tracking-wider">
+              New · Online consultation
+            </Badge>
+            <h2 className="text-balance text-3xl font-bold tracking-tight sm:text-4xl">See your doctor without leaving your room</h2>
+            <p className="mt-3 text-pretty text-muted-foreground">
+              Pick <strong>Online</strong> when you book. At appointment time, join a private video room with your doctor — with
+              built-in chat, screen sharing and a waiting lobby. Powered by Jitsi, free and secure.
+            </p>
+            <Button asChild size="lg" className="mt-6 h-12 px-6 text-base font-semibold">
+              <Link href="/register">
+                Book an online consultation <Video className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
