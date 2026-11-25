@@ -22,3 +22,8 @@ embedded PGlite fallback, JWT cookie auth).
 
 ## Status
 See the checklist in docs/TODO.md and `git log` for the latest completed batch.
+
+## Batch 4 notes (Jitsi)
+- Room name is generated at booking (appointments.room, unguessable). It is only returned by GET /api/consultations/[id] to the student/doctor on that appointment, inside the join window.
+- Public meet.jit.si may require a moderator login or limit embedded use; set NEXT_PUBLIC_JITSI_DOMAIN to a self-hosted Jitsi or JaaS-compatible domain if so.
+- Next: Batch 5 (chat "Start video call" button in messages.tsx, dashboard polish, README).

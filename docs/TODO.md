@@ -21,10 +21,11 @@ Legend: [x] done · [ ] pending · [~] in progress
 - [x] ALTER TABLE ... ADD COLUMN IF NOT EXISTS in migrate.mjs, neon-setup.sql, demo-seed.ts; POST /api/appointments accepts mode
 
 ## Batch 4 — Jitsi video consultation
-- [ ] src/components/consultation/jitsi-room.tsx (Jitsi IFrame API, meet.jit.si)
-- [ ] API: GET /api/consultations/[id] (auth + room name), POST join/end
-- [ ] Booking flow: student chooses In-person or Online
-- [ ] Doctor + student dashboards: "Join video call" button, call page /dashboard/call/[id]
+- [x] src/components/consultation/jitsi-room.tsx (Jitsi IFrame API, meet.jit.si; domain via NEXT_PUBLIC_JITSI_DOMAIN)
+- [x] API: GET /api/consultations/[id] (participants only; room released 15 min before slot to 90 min after), POST {action:"end"} (doctor)
+- [x] Booking flow: student chooses In-person or Online
+- [x] Doctor + student dashboards: "Join video call" button + Online badge, call page /dashboard/call/[id]
+- [ ] Verify on a deployed build with two real accounts (sandbox could not run `next build`: Google Fonts blocked; tsc + eslint on new files are clean)
 
 ## Batch 5 — Chat + polish
 - [ ] Messages: "Start video call" button inside thread

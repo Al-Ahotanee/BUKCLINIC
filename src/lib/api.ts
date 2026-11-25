@@ -85,6 +85,7 @@ export interface Appointment {
   time: string;
   reason: string | null;
   status: "booked" | "completed" | "cancelled";
+  mode?: "in_person" | "online";
   student_id?: number;
   doctor_id?: number;
   student_name?: string;

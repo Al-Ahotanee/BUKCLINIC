@@ -14,6 +14,7 @@ import {
   Sparkles,
   Stethoscope,
   UserRound,
+  Video,
 } from "lucide-react";
 import { toast } from "sonner";
 import { api, formatDatePlain, formatTime, initials, relativeDay, todayISO, type Appointment, type Doctor, type SessionUser } from "@/lib/api";
@@ -46,6 +47,7 @@ import { EmptyState, StatCard } from "./stat-card";
 import { Messages } from "./messages";
 import { SlotPicker } from "./slot-picker";
 import { ProfilePanel } from "./profile-panel";
+import { JoinCallButton, ModeBadge } from "@/components/consultation/join-call-button";
 import { cn } from "@/lib/utils";
 
 export type StudentSection = "overview" | "book" | "appointments" | "messages" | "profile";
@@ -130,6 +132,7 @@ function StudentOverview({ user, setSection, unread }: { user: SessionUser; setS
               </p>
               <p className="text-sm text-muted-foreground">with {next.doctor_name}</p>
             </div>
+            <JoinCallButton id={next.id} mode={next.mode} status={next.status} />
             <Badge className="rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-400" variant="secondary">
               Booked
             </Badge>
@@ -191,6 +194,7 @@ function Book({ onBooked }: { onBooked: () => void }) {
   const [doctorId, setDoctorId] = useState("");
   const [pick, setPick] = useState({ date: "", time: "" });
   const [reason, setReason] = useState("");
+  const [mode, setMode] = useState<"in_person" | "online">("in_person");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -210,11 +214,11 @@ function Book({ onBooked }: { onBooked: () => void }) {
     setBusy(true);
     const r = await api<{ ok: boolean }>("/api/appointments", {
       method: "POST",
-      body: { doctor_id: Number(doctorId), date: pick.date, time: pick.time, reason },
+      body: { doctor_id: Number(doctorId), date: pick.date, time: pick.time, reason, mode },
     });
     setBusy(false);
     if (r.ok) {
-      toast.success("Appointment booked", {
+      toast.success(mode === "online" ? "Online consultation booked" : "Appointment booked", {
         description: `${relativeDay(pick.date)}, ${formatDatePlain(pick.date)} at ${formatTime(pick.time)} with ${doc?.name}.`,
       });
       onBooked();
@@ -266,6 +270,31 @@ function Book({ onBooked }: { onBooked: () => void }) {
             </div>
           </div>
         )}
+      </div>
+
+      <div className="space-y-1.5">
+        <Label>Consultation type</Label>
+        <div className="grid max-w-md grid-cols-2 gap-3">
+          {([
+            { v: "in_person", label: "In person", desc: "Visit the clinic", Icon: Stethoscope },
+            { v: "online", label: "Online", desc: "Video call + chat", Icon: Video },
+          ] as const).map(({ v, label, desc, Icon }) => (
+            <button
+              key={v}
+              type="button"
+              onClick={() => setMode(v)}
+              aria-pressed={mode === v}
+              className={cn(
+                "flex items-center gap-3 rounded-xl border bg-card p-3 text-left transition-all hover:border-primary/40",
+                mode === v && "border-primary bg-primary/5 ring-2 ring-primary/30"
+              )}
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10"><Icon className="h-4 w-4 text-primary" /></span>
+              <span className="text-sm"><span className="block font-semibold">{label}</span><span className="text-xs text-muted-foreground">{desc}</span></span>
+            </button>
+          ))}
+        </div>
+        {mode === "online" && <p className="text-xs text-muted-foreground">You will get a private video room. It opens 15 minutes before your slot, from My appointments.</p>}
       </div>
 
       {doctorId && doc && doc.availability.length > 0 && (
@@ -391,6 +420,7 @@ function Mine() {
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="font-semibold">{a.doctor_name}</p>
                     <StatusBadge status={a.status} />
+                    <ModeBadge mode={a.mode} />
                   </div>
                   <p className="mt-0.5 text-sm text-muted-foreground">
                     {relativeDay(a.date)}, {formatDatePlain(a.date)} · {formatTime(a.time)}
@@ -398,7 +428,8 @@ function Mine() {
                   {a.reason && <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">“{a.reason}”</p>}
                 </div>
                 {a.status === "booked" && (
-                  <div className="flex gap-2 sm:ml-auto">
+                  <div className="flex flex-wrap gap-2 sm:ml-auto">
+                    <JoinCallButton id={a.id} mode={a.mode} status={a.status} />
                     <Button
                       variant="outline"
                       size="sm"

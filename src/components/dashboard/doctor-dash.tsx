@@ -33,6 +33,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState, StatCard } from "./stat-card";
 import { Messages } from "./messages";
 import { StatusBadge } from "./student-dash";
+import { JoinCallButton, ModeBadge } from "@/components/consultation/join-call-button";
 import { cn } from "@/lib/utils";
 
 export type DoctorSection = "overview" | "appointments" | "messages";
@@ -142,6 +143,8 @@ function DoctorOverview({ user, setSection }: { user: SessionUser; setSection: (
                     {a.reason ? ` · ${a.reason}` : ""}
                   </p>
                 </div>
+                <ModeBadge mode={a.mode} />
+                <JoinCallButton id={a.id} mode={a.mode} status={a.status} />
                 <StatusBadge status={a.status} />
               </div>
             ))}
@@ -239,6 +242,7 @@ function DocAppts() {
                     <p className="font-semibold">{a.student_name}</p>
                     <span className="text-xs text-muted-foreground">{a.matric_no}</span>
                     <StatusBadge status={a.status} />
+                    <ModeBadge mode={a.mode} />
                   </div>
                   <p className="mt-0.5 text-sm text-muted-foreground">
                     {relativeDay(a.date)}, {formatDatePlain(a.date)} · {formatTime(a.time)}
@@ -246,7 +250,8 @@ function DocAppts() {
                   {a.reason && <p className="mt-1 text-sm text-muted-foreground">“{a.reason}”</p>}
                 </div>
                 {a.status === "booked" && (
-                  <div className="flex gap-2 sm:ml-auto">
+                  <div className="flex flex-wrap gap-2 sm:ml-auto">
+                    <JoinCallButton id={a.id} mode={a.mode} status={a.status} />
                     <Button size="sm" disabled={busy} onClick={() => act(a.id, "complete", "Marked as completed")}>
                       <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" /> Complete
                     </Button>
