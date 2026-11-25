@@ -1,53 +1,106 @@
-# BUK Clinic Appointment Booking System
+# Bayero University Clinic — Appointment Platform
 
-Web-based patient appointment booking and messaging system for the Bayero University Clinic
-(student / doctor / administrator roles).
-
-**Stack:** Next.js 14 (App Router) · Neon Postgres (`@neondatabase/serverless`, HTTP driver) · JWT cookie auth (`jose`) · bcryptjs. Deploys to Vercel with zero extra config.
+The official online appointment booking and secure messaging platform for the **Bayero University
+Kano Clinic**. Students register with their matriculation number, see live doctor availability,
+book / reschedule / cancel consultations, and message their doctor — all in one place.
 
 ## Features
-- **Students:** register, log in, view doctors and weekly availability, book / reschedule / cancel, message doctors.
-- **Doctors:** view upcoming/today/all appointments, mark completed or cancel, reply to students.
-- **Admin:** create doctor accounts, activate/deactivate users, manage doctor weekly schedules, see all appointments and stats.
-- Double-booking is prevented in the database (partial unique index) and checked in the API.
-- Slot times use Africa/Lagos time, past slots are hidden.
-- Messaging uses polling (8s), which works on Vercel serverless.
 
-## 1. Create the Neon database
-1. Go to https://neon.tech, create a project, copy the **pooled** connection string.
+**Students**
+- Self-service registration (matric number required) and login
+- Live availability: 14-day date picker with morning / afternoon slot grouping
+- Book, reschedule, and cancel with confirmation dialogs and toast feedback
+- Private one-to-one messaging with clinic doctors
+- Profile: phone number + password change
 
-## 2. Create tables manually (alternative to `npm run migrate`)
-Open the Neon **SQL Editor**, paste the contents of `scripts/neon-setup.sql` and run it. Change the admin email/password in that file first.
+**Doctors**
+- Today-at-a-glance overview with stats
+- Appointment management (upcoming / today / all) with search
+- Mark visits complete or cancel them
+- Message students who have an appointment or conversation with them
 
-## 3. Run locally
-```bash
-npm install
-cp .env.example .env.local     # fill DATABASE_URL, JWT_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD
-npm run migrate                # creates tables, the admin, and (optionally) 2 demo doctors
-npm run dev                    # http://localhost:3000
-```
-Generate a secret with `openssl rand -base64 32`.
+**Administrators**
+- Live overview: user counts, appointment status, 7-day booking chart, completion rate
+- Create doctor accounts, activate / deactivate any user
+- Manage doctor weekly schedules (blocks, slot length, overlap protection)
+- Browse and cancel any appointment (latest 300)
 
-Default demo logins (if `SEED_DEMO=true`): `dr.bello@buk.edu.ng` / `Doctor123!`. Admin uses the values you set in `.env.local`.
+**Platform**
+- Role-based dashboards (student / doctor / admin) with sidebar navigation
+- Light & dark themes, fully responsive down to small phones
+- Double-booking is impossible: a partial unique index in Postgres plus API-level checks
+- Slot times are Africa/Lagos aware; past slots are hidden automatically
+- Messaging uses 8-second polling — serverless-friendly, no WebSocket infrastructure
 
-## 4. Deploy to Vercel
-1. Push this folder to a GitHub repo (or run `npx vercel`).
-2. In Vercel: **Add New Project** → import the repo (framework auto-detected as Next.js).
-3. Add Environment Variables: `DATABASE_URL`, `JWT_SECRET`.
-4. Deploy. (Run `npm run migrate` once from your machine against the same `DATABASE_URL`; it is not needed on every deploy.)
+## Stack
 
-## Project layout
-```
-app/api/...        REST endpoints (auth, doctors, appointments, messages, admin)
-app/dashboard      role-based dashboard
-components/        StudentDash, DoctorDash, AdminDash, Messages, SlotPicker
-lib/               db (Neon), auth (JWT/cookies/role guard), slots (availability logic)
-scripts/migrate.mjs  schema + seed
-```
+- **Next.js 16** (App Router) · React 19 · TypeScript (strict)
+- **Tailwind CSS 4** + shadcn/ui (New York) + Lucide icons + Framer Motion + Recharts
+- **Neon Postgres** via `@neondatabase/serverless` (HTTP driver — zero-config on Vercel)
+- **JWT cookie auth** (`jose`, httpOnly cookies) + bcryptjs password hashing
+- **Embedded preview DB**: without `DATABASE_URL` the app boots on an in-repo Postgres
+  (PGlite) pre-seeded with demo data — clone, `npm install`, `npm run dev`, done.
 
 ## Database tables
-`users` (role: student|doctor|admin) · `schedules` (doctor weekly blocks) · `appointments` (booked|completed|cancelled) · `messages`.
 
-## Notes / limitations
-Booking and messaging only; not for emergencies and not a medical records system (matches the project scope).
-Before going live: change the admin password, use a strong `JWT_SECRET`, and consider adding rate limiting on login.
+| Table | Purpose |
+| --- | --- |
+| `users` | student / doctor / admin accounts (role column) |
+| `schedules` | doctor weekly availability blocks (weekday, start, end, slot minutes) |
+| `appointments` | booked / completed / cancelled visits |
+| `messages` | one-to-one student ↔ doctor messages with read receipts |
+
+## 1 · Create the database
+
+Create a project on [neon.tech](https://neon.tech) and copy the **pooled** connection string.
+Then either:
+
+- run `npm run migrate` (creates all tables + the admin account, optional demo doctors), **or**
+- paste `scripts/neon-setup.sql` into the Neon SQL Editor (idempotent, safe to re-run).
+
+## 2 · Configure
+
+```bash
+cp .env.example .env.local
+# fill DATABASE_URL and JWT_SECRET (openssl rand -base64 32)
+npm run migrate
+```
+
+## 3 · Run
+
+```bash
+npm install
+npm run dev        # http://localhost:3000
+```
+
+Without `DATABASE_URL`, the app starts an embedded demo database instead:
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Admin | `admin@buk.edu.ng` | `Admin123!` |
+| Doctor | `dr.bello@buk.edu.ng` | `Doctor123!` |
+| Doctor | `dr.danladi@buk.edu.ng` | `Doctor123!` |
+| Doctor | `dr.yusuf@buk.edu.ng` | `Doctor123!` |
+| Student | `musa.ibrahim@student.buk.edu.ng` | `Student123!` |
+
+## 4 · Deploy to Vercel
+
+1. Push to GitHub and import the repo in Vercel (framework auto-detected).
+2. Add environment variables: `DATABASE_URL`, `JWT_SECRET`.
+3. Deploy. Run `npm run migrate` once against the same `DATABASE_URL` — it is not needed per deploy.
+
+## Project layout
+
+```
+src/app/            landing page, /login, /register, /dashboard + REST API routes
+src/components/     site (landing chrome) · dashboard (shell, role dashboards) · ui (shadcn)
+src/lib/            db (Neon + embedded fallback), auth (JWT/cookies/role guard), slots, api helpers
+scripts/            migrate.mjs (schema + seed) · neon-setup.sql (SQL-editor alternative)
+```
+
+## Notes
+
+- This platform handles **booking and messaging only** — it is not for emergencies and not a
+  medical records system.
+- Before going live: change the admin password, use a strong `JWT_SECRET`, and consider adding
+  rate limiting on login.
