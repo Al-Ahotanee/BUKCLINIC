@@ -64,7 +64,7 @@ for (const s of statements) {
 console.log("Tables ready.");
 
 const adminEmail = (process.env.ADMIN_EMAIL || "admin@buk.edu.ng").toLowerCase();
-const adminPass = process.env.ADMIN_PASSWORD || "ChangeMe123!";
+const adminPass = process.env.ADMIN_PASSWORD || "Admin123!";
 const existing = await sql.query("SELECT id FROM users WHERE email = $1", [adminEmail]);
 if (existing.length === 0) {
   const hash = await bcrypt.hash(adminPass, 10);
@@ -73,14 +73,19 @@ if (existing.length === 0) {
     [adminEmail, hash]
   );
   console.log(`Admin created: ${adminEmail}`);
+} else if (process.env.RESET_ADMIN_PASSWORD === "true") {
+  const hash = await bcrypt.hash(adminPass, 10);
+  await sql.query("UPDATE users SET password_hash = $1, active = TRUE WHERE email = $2", [hash, adminEmail]);
+  console.log(`Admin password reset for ${adminEmail}`);
 } else {
-  console.log("Admin already exists, skipped.");
+  console.log("Admin already exists, skipped. (Set RESET_ADMIN_PASSWORD=true to reset its password.)");
 }
 
 if (process.env.SEED_DEMO === "true") {
   const demo = [
     ["Dr. Aisha Bello", "dr.bello@buk.edu.ng", "General Practitioner"],
     ["Dr. Musa Danladi", "dr.danladi@buk.edu.ng", "Family Medicine"],
+    ["Dr. Yusuf Abdullahi", "dr.yusuf@buk.edu.ng", "General Practitioner"],
   ];
   const hash = await bcrypt.hash("Doctor123!", 10);
   for (const [name, email, spec] of demo) {
@@ -99,6 +104,16 @@ if (process.env.SEED_DEMO === "true") {
       );
     }
     console.log(`Demo doctor created: ${email}`);
+  }
+  const studentEmail = "musa.ibrahim@student.buk.edu.ng";
+  const sr = await sql.query("SELECT id FROM users WHERE email = $1", [studentEmail]);
+  if (!sr.length) {
+    const sh = await bcrypt.hash("Student123!", 10);
+    await sql.query(
+      "INSERT INTO users (role, name, email, password_hash, matric_no) VALUES ('student', 'Musa Ibrahim', $1, $2, 'CST/21/0001')",
+      [studentEmail, sh]
+    );
+    console.log(`Demo student created: ${studentEmail}`);
   }
 }
 console.log("Done.");
