@@ -16,7 +16,10 @@ Web-based patient appointment booking and messaging system for the Bayero Univer
 ## 1. Create the Neon database
 1. Go to https://neon.tech, create a project, copy the **pooled** connection string.
 
-## 2. Run locally
+## 2. Create tables manually (alternative to `npm run migrate`)
+Open the Neon **SQL Editor**, paste the contents of `scripts/neon-setup.sql` and run it. Change the admin email/password in that file first.
+
+## 3. Run locally
 ```bash
 npm install
 cp .env.example .env.local     # fill DATABASE_URL, JWT_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD
@@ -27,7 +30,7 @@ Generate a secret with `openssl rand -base64 32`.
 
 Default demo logins (if `SEED_DEMO=true`): `dr.bello@buk.edu.ng` / `Doctor123!`. Admin uses the values you set in `.env.local`.
 
-## 3. Deploy to Vercel
+## 4. Deploy to Vercel
 1. Push this folder to a GitHub repo (or run `npx vercel`).
 2. In Vercel: **Add New Project** → import the repo (framework auto-detected as Next.js).
 3. Add Environment Variables: `DATABASE_URL`, `JWT_SECRET`.
