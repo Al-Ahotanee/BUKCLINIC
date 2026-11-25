@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 const SELECT = `
   SELECT a.id, to_char(a.appt_date,'YYYY-MM-DD') AS date, to_char(a.appt_time,'HH24:MI') AS time,
-         a.reason, a.status, a.student_id, a.doctor_id,
+         a.reason, a.status, a.mode, a.student_id, a.doctor_id,
          s.name AS student_name, s.matric_no, d.name AS doctor_name
   FROM appointments a
   JOIN users s ON s.id = a.student_id
@@ -31,11 +31,15 @@ export async function POST(req: Request) {
     date?: string;
     time?: string;
     reason?: string;
+    mode?: string;
   };
   const doctorId = Number(b.doctor_id);
   const date = b.date || "";
   const time = b.time || "";
   const reason = (b.reason || "").trim().slice(0, 500);
+  const mode = b.mode === "online" ? "online" : "in_person";
+  // Unguessable Jitsi room name; only the two participants can fetch it (see /api/consultations/[id]).
+  const room = mode === "online" ? `bukclinic-${crypto.randomUUID().replace(/-/g, "").slice(0, 20)}` : null;
 
   if (!doctorId) return fail("Choose a doctor");
   if (!isValidDate(date) || !isValidTime(time)) return fail("Choose a valid date and time");
@@ -56,8 +60,8 @@ export async function POST(req: Request) {
 
   try {
     const rows = await query<{ id: number }>(
-      "INSERT INTO appointments (student_id, doctor_id, appt_date, appt_time, reason) VALUES ($1,$2,$3,$4,$5) RETURNING id",
-      [user!.id, doctorId, date, time, reason || null]
+      "INSERT INTO appointments (student_id, doctor_id, appt_date, appt_time, reason, mode, room) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id",
+      [user!.id, doctorId, date, time, reason || null, mode, room]
     );
     return json({ ok: true, id: rows[0].id }, 201);
   } catch (e) {

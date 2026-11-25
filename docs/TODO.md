@@ -17,8 +17,8 @@ Legend: [x] done · [ ] pending · [~] in progress
 - [x] Auth shell uses crest + campus imagery (navbar/footer inherit new Logo)
 
 ## Batch 3 — Database for consultations
-- [ ] appointments.mode ('in_person' | 'online'), appointments.room, started_at, ended_at
-- [ ] Update scripts/migrate.mjs, scripts/neon-setup.sql, src/lib/db.ts (PGlite) + demo seed
+- [x] appointments.mode (in_person|online) + appointments.room (Jitsi room name)
+- [x] ALTER TABLE ... ADD COLUMN IF NOT EXISTS in migrate.mjs, neon-setup.sql, demo-seed.ts; POST /api/appointments accepts mode
 
 ## Batch 4 — Jitsi video consultation
 - [ ] src/components/consultation/jitsi-room.tsx (Jitsi IFrame API, meet.jit.si)

@@ -47,6 +47,8 @@ const statements = [
      ON appointments (doctor_id, appt_date, appt_time) WHERE status = 'booked'`,
   `CREATE INDEX IF NOT EXISTS idx_appt_student ON appointments (student_id, appt_date)`,
   `CREATE INDEX IF NOT EXISTS idx_appt_doctor ON appointments (doctor_id, appt_date)`,
+  `ALTER TABLE appointments ADD COLUMN IF NOT EXISTS mode TEXT NOT NULL DEFAULT 'in_person'`,
+  `ALTER TABLE appointments ADD COLUMN IF NOT EXISTS room TEXT`,
   `CREATE TABLE IF NOT EXISTS messages (
     id SERIAL PRIMARY KEY,
     sender_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
