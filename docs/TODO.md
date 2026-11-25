@@ -8,9 +8,9 @@ Legend: [x] done · [ ] pending · [~] in progress
 - [x] TODO.md + HANDOVER.md + asset fetch script
 
 ## Batch 1 — BUK theme
-- [ ] globals.css: replace Clinical Emerald tokens with BUK Turquoise Blue (light + dark)
-- [ ] Logo component: real BUK crest (local /brand/buk-logo.png → remote → SVG fallback)
-- [ ] layout.tsx themeColor/metadata, public/icon.svg recoloured
+- [x] globals.css: BUK Turquoise Blue tokens (light + dark)
+- [x] Logo component: BUK crest (local → remote → SVG fallback)
+- [x] layout.tsx themeColor, icon.svg recoloured
 
 ## Batch 2 — BUK imagery and pages
 - [ ] Landing hero + sections with BUK campus images
