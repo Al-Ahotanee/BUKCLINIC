@@ -132,7 +132,7 @@ export function AppShell({ user, onLogout }: { user: SessionUser; onLogout: () =
       {/* Main column */}
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Topbar */}
-        <header className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border/70 bg-background/85 px-4 backdrop-blur-lg sm:px-6">
+        <header className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b-2 border-b-primary/60 bg-background/85 px-4 backdrop-blur-lg sm:px-6">
           {/* Mobile drawer trigger */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>

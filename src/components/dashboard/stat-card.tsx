@@ -25,7 +25,8 @@ export function StatCard({
     neutral: "bg-muted text-foreground",
   };
   return (
-    <div className="rounded-xl border bg-card p-4 sm:p-5">
+    <div className="relative overflow-hidden rounded-xl border bg-card p-4 transition-shadow hover:shadow-md sm:p-5">
+      <span className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-primary to-primary/20" aria-hidden />
       <div className="flex items-center justify-between gap-2">
         <span className={cn("flex h-9 w-9 items-center justify-center rounded-lg", tones[tone])}>
           <Icon className="h-4.5 w-4.5" />

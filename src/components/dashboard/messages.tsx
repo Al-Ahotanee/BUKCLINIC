@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Loader2, MessageSquareText, SendHorizonal } from "lucide-react";
-import { api, initials, type ChatMessage, type Contact } from "@/lib/api";
+import { useRouter } from "next/navigation";
+import { Loader2, MessageSquareText, SendHorizonal, Video } from "lucide-react";
+import { api, initials, todayISO, type Appointment, type ChatMessage, type Contact } from "@/lib/api";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,8 @@ export function Messages({ onUnread }: { onUnread?: (n: number) => void }) {
   const [text, setText] = useState("");
   const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
+  const [callId, setCallId] = useState<number | null>(null);
+  const router = useRouter();
   const box = useRef<HTMLDivElement>(null);
   const onUnreadRef = useRef(onUnread);
   useEffect(() => {
@@ -64,6 +67,26 @@ export function Messages({ onUnread }: { onUnread?: (n: number) => void }) {
     }, 8000);
     return () => clearInterval(t);
   }, [active?.id, loadThread, loadContacts]);
+
+  // Find the next booked online consultation with the selected person (if any).
+  useEffect(() => {
+    if (!active) return;
+    let live = true;
+    const peer = active.id;
+    api<{ appointments: Appointment[] }>("/api/appointments").then((r) => {
+      if (!live) return;
+      const today = todayISO();
+      const next = r.ok
+        ? r.data.appointments
+            .filter((a) => a.mode === "online" && a.status === "booked" && a.date >= today && (a.doctor_id === peer || a.student_id === peer))
+            .sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time))[0]
+        : undefined;
+      setCallId(next ? next.id : null);
+    });
+    return () => {
+      live = false;
+    };
+  }, [active]);
 
   useEffect(() => {
     if (box.current) box.current.scrollTop = box.current.scrollHeight;
@@ -169,6 +192,11 @@ export function Messages({ onUnread }: { onUnread?: (n: number) => void }) {
                 <p className="truncate text-sm font-semibold">{active.name}</p>
                 <p className="truncate text-xs text-muted-foreground">{active.detail || ""}</p>
               </div>
+              {callId && (
+                <Button size="sm" className="ml-auto shrink-0" onClick={() => router.push(`/dashboard/call/${callId}`)}>
+                  <Video className="mr-1.5 h-3.5 w-3.5" /> Start video call
+                </Button>
+              )}
             </div>
 
             <div ref={box} className="scroll-slim flex h-[360px] flex-1 flex-col gap-2.5 overflow-y-auto bg-muted/20 p-4">

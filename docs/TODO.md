@@ -28,6 +28,6 @@ Legend: [x] done · [ ] pending · [~] in progress
 - [ ] Verify on a deployed build with two real accounts (sandbox could not run `next build`: Google Fonts blocked; tsc + eslint on new files are clean)
 
 ## Batch 5 — Chat + polish
-- [ ] Messages: "Start video call" button inside thread
-- [ ] Dashboard UI polish with BUK theme (app-shell, stat cards, charts)
-- [ ] README update, final HANDOVER update
+- [x] Messages: "Start video call" button inside thread
+- [x] Dashboard UI polish with BUK theme (turquoise header rule, stat card accent)
+- [x] README update, final HANDOVER update

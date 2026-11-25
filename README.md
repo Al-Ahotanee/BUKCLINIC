@@ -104,3 +104,15 @@ scripts/            migrate.mjs (schema + seed) · neon-setup.sql (SQL-editor al
   medical records system.
 - Before going live: change the admin password, use a strong `JWT_SECRET`, and consider adding
   rate limiting on login.
+
+
+## Online consultation (Jitsi)
+
+Students choose **In person** or **Online** when booking. Online bookings get an unguessable room name that only the
+student and doctor on that appointment can fetch (`GET /api/consultations/[id]`), available from 15 minutes before the
+slot to 90 minutes after it starts. Join from **My appointments**, the dashboard overview, or the **Messages** thread
+(Start video call). The call page is `/dashboard/call/[id]`.
+
+Video uses the free Jitsi IFrame API on `meet.jit.si`. If the public server restricts embedding, set
+`NEXT_PUBLIC_JITSI_DOMAIN` to a self-hosted Jitsi domain. Text chat is the built-in Messages feature, and Jitsi also has
+in-call chat.
