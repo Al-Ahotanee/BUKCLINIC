@@ -37,4 +37,4 @@ Legend: [x] done · [ ] pending · [~] in progress
 ## Feature: consultation records + prescriptions (started Nov 26)
 - [x] Batch 6: DB tables (consultation_records, prescriptions; created lazily via ensureRecordsSchema + in migrate.mjs / neon-setup.sql / demo-seed.ts) and APIs (/api/records/[appointmentId], /api/prescriptions, /api/prescriptions/[appointmentId])
 - [x] Batch 7: doctor record form (complaint, vitals, examination, diagnosis, plan, private notes, prescription rows, save / send) + formal printable prescription sheet component
-- Batch 8: student "Prescriptions" section (list + view + print/save as PDF), sent-notification message, polish, docs
+- [x] Batch 8: student "Prescriptions" section (list + view + print/save as PDF), sent-notification message, polish, docs

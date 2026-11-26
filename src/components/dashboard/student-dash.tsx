@@ -9,6 +9,7 @@ import {
   Clock,
   Loader2,
   MessageSquareText,
+  Pill,
   Search,
   ShieldCheck,
   Sparkles,
@@ -47,14 +48,16 @@ import { EmptyState, StatCard } from "./stat-card";
 import { Messages } from "./messages";
 import { SlotPicker } from "./slot-picker";
 import { ProfilePanel } from "./profile-panel";
+import { PrescriptionsPanel } from "./prescriptions-panel";
 import { JoinCallButton, ModeBadge } from "@/components/consultation/join-call-button";
 import { cn } from "@/lib/utils";
 
-export type StudentSection = "overview" | "book" | "appointments" | "messages" | "profile";
+export type StudentSection = "overview" | "book" | "appointments" | "prescriptions" | "messages" | "profile";
 export const STUDENT_SECTIONS = [
   { key: "overview" as const, label: "Overview", icon: LayoutIcon },
   { key: "book" as const, label: "Book appointment", icon: CalendarPlus },
   { key: "appointments" as const, label: "My appointments", icon: CalendarDays },
+  { key: "prescriptions" as const, label: "Prescriptions", icon: Pill },
   { key: "messages" as const, label: "Messages", icon: MessageSquareText },
   { key: "profile" as const, label: "Profile", icon: UserRound },
 ];
@@ -85,6 +88,8 @@ export function StudentDash({
       return <Book onBooked={() => setSection("appointments")} />;
     case "appointments":
       return <Mine />;
+    case "prescriptions":
+      return <PrescriptionsPanel />;
     case "messages":
       return (
         <div>

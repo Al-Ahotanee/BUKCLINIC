@@ -35,3 +35,10 @@ See the checklist in docs/TODO.md and `git log` for the latest completed batch.
 
 ## Real BUK assets (Nov 26)
 - Real crest (public/brand/buk-logo.png, 80x80), aerial campus (buk-campus-aerial.jpg) and main building (buk-campus-building.jpg) supplied by the user are now in use; SVGs remain as fallbacks. Source images are only 474x266, so higher-resolution originals would look sharper. Favicon now uses the crest.
+
+## Consultation records + prescriptions (Nov 26) — DONE, needs a real-browser check
+- Tables consultation_records and prescriptions are created automatically on first use (src/lib/records-schema.ts); also in migrate.mjs, neon-setup.sql, demo-seed.ts.
+- Doctor: Appointments > "Consultation record" opens a side sheet (Consultation, Diagnosis & plan, Prescription tabs). "Save record" keeps it private; "Save & send prescription" needs a diagnosis and at least one medicine, releases it to the student and posts an in-app message. Private notes never leave the doctor side.
+- Student: sidebar "Prescriptions" lists sent prescriptions; opening one shows the formal letterhead form (src/components/consultation/prescription-sheet.tsx) with Print / Save as PDF (print CSS at the end of globals.css).
+- API-tested against the embedded database (access control, validation, message). The UI itself was only type-checked and linted, not viewed in a browser.
+- Ideas: doctor-side list of issued prescriptions, QR/verification code on the form, open the record sheet from the video call page.

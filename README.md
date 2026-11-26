@@ -118,3 +118,10 @@ Video uses the Jitsi IFrame API. For rooms that open instantly, create a free Ja
 app uses the public `meet.jit.si` server, where the first person must sign in once. `NEXT_PUBLIC_JITSI_DOMAIN` points
 at a self-hosted server instead. Text chat is the built-in Messages feature, and Jitsi also has
 in-call chat.
+
+## Consultation records and prescriptions
+
+Doctors record each consultation (complaint, history, vitals, examination, diagnosis, plan, private notes) from
+**Appointments > Consultation record**, and can write a prescription and send it to the patient. Students see sent
+prescriptions under **Prescriptions** as a formal clinic form that can be printed or saved as a PDF. The tables are
+created automatically on first use.

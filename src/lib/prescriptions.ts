@@ -21,6 +21,11 @@ type Row = {
   follow_up_date: string | null;
 }
 
+// Postgres text timestamps ("2026-11-26 09:46:36.5+00") are not valid ISO in every browser (Safari); normalise.
+export function isoTs(v: string): string {
+  return v.replace(" ", "T").replace(/([+-]\d\d)$/, "$1:00");
+}
+
 export function parseItems(v: unknown): RxItem[] {
   let arr: unknown = v;
   if (typeof v === "string") {
@@ -66,7 +71,7 @@ export async function loadPrescription(appointmentId: number): Promise<{ doc: Pr
     doc: {
       appointment_id: r.appointment_id,
       rx_no: r.rx_no,
-      issued_at: r.sent_at ?? r.updated_at,
+      issued_at: isoTs(r.sent_at ?? r.updated_at),
       consultation_date: r.consultation_date,
       patient_name: r.patient_name,
       matric_no: r.matric_no,
