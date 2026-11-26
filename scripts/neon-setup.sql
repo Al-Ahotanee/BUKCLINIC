@@ -81,3 +81,27 @@ WHERE u.email IN ('dr.bello@buk.edu.ng', 'dr.danladi@buk.edu.ng')
 
 -- 5. Check
 SELECT role, COUNT(*) FROM users GROUP BY role;
+
+-- Consultation records and prescriptions (also created automatically on first use)
+CREATE TABLE IF NOT EXISTS consultation_records (
+  id SERIAL PRIMARY KEY,
+  appointment_id INT NOT NULL UNIQUE REFERENCES appointments(id) ON DELETE CASCADE,
+  doctor_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  student_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  chief_complaint TEXT, history TEXT, allergies TEXT,
+  bp TEXT, temperature TEXT, pulse TEXT, weight TEXT,
+  examination TEXT, diagnosis TEXT, treatment_plan TEXT, advice TEXT,
+  follow_up_date DATE, private_notes TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE TABLE IF NOT EXISTS prescriptions (
+  id SERIAL PRIMARY KEY,
+  appointment_id INT NOT NULL UNIQUE REFERENCES appointments(id) ON DELETE CASCADE,
+  rx_no TEXT NOT NULL,
+  items JSONB NOT NULL DEFAULT '[]',
+  instructions TEXT,
+  sent_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
