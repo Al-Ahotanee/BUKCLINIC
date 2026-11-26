@@ -113,6 +113,8 @@ student and doctor on that appointment can fetch (`GET /api/consultations/[id]`)
 slot to 90 minutes after it starts. Join from **My appointments**, the dashboard overview, or the **Messages** thread
 (Start video call). The call page is `/dashboard/call/[id]`.
 
-Video uses the free Jitsi IFrame API on `meet.jit.si`. If the public server restricts embedding, set
-`NEXT_PUBLIC_JITSI_DOMAIN` to a self-hosted Jitsi domain. Text chat is the built-in Messages feature, and Jitsi also has
+Video uses the Jitsi IFrame API. For rooms that open instantly, create a free JaaS key at jaas.8x8.vc and set
+`JAAS_APP_ID`, `JAAS_KID` and `JAAS_PRIVATE_KEY` (see `.env.example`); the doctor joins as moderator. Without them the
+app uses the public `meet.jit.si` server, where the first person must sign in once. `NEXT_PUBLIC_JITSI_DOMAIN` points
+at a self-hosted server instead. Text chat is the built-in Messages feature, and Jitsi also has
 in-call chat.

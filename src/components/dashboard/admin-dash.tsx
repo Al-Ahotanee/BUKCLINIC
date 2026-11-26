@@ -60,6 +60,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { EmptyState, StatCard } from "./stat-card";
+import { ModeBadge } from "@/components/consultation/join-call-button";
 import { StatusBadge } from "./student-dash";
 import { cn } from "@/lib/utils";
 
@@ -136,10 +137,14 @@ function AdminOverview({ adminName }: { adminName: string }) {
     if (!data) return [];
     return [
       { name: "Booked", value: data.stats.booked, fill: "#D97706" },
-      { name: "Completed", value: data.stats.completed, fill: "#059669" },
+      { name: "Completed", value: data.stats.completed, fill: "#0E8FAE" },
       { name: "Cancelled", value: data.stats.cancelled, fill: "#DC2626" },
     ].filter((d) => d.value > 0);
   }, [data]);
+
+  const live = (data?.appointments ?? []).filter((a) => a.status !== "cancelled");
+  const onlineCount = live.filter((a) => a.mode === "online").length;
+  const onlinePct = live.length ? Math.round((onlineCount / live.length) * 100) : 0;
 
   if (!data) {
     return (
@@ -186,12 +191,12 @@ function AdminOverview({ adminName }: { adminName: string }) {
           <CardContent className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={weekly} barSize={18}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="oklch(0.596 0.145 163.2 / 15%)" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="oklch(0.596 0.125 213 / 18%)" />
                 <XAxis dataKey="day" tickLine={false} axisLine={false} fontSize={12} />
                 <YAxis allowDecimals={false} tickLine={false} axisLine={false} fontSize={12} width={28} />
-                <RTooltip cursor={{ fill: "oklch(0.596 0.145 163.2 / 8%)" }} contentStyle={{ borderRadius: 12, border: "1px solid oklch(0.908 0.014 163)", fontSize: 13 }} />
+                <RTooltip cursor={{ fill: "oklch(0.596 0.125 213 / 10%)" }} contentStyle={{ borderRadius: 12, border: "1px solid oklch(0.898 0.018 213)", fontSize: 13 }} />
                 <Bar dataKey="booked" name="Booked" fill="#D97706" radius={[6, 6, 0, 0]} />
-                <Bar dataKey="completed" name="Completed" fill="#059669" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="completed" name="Completed" fill="#0E8FAE" radius={[6, 6, 0, 0]} />
                 <Bar dataKey="cancelled" name="Cancelled" fill="#DC2626" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -214,7 +219,7 @@ function AdminOverview({ adminName }: { adminName: string }) {
                       <Cell key={d.name} fill={d.fill} />
                     ))}
                   </Pie>
-                  <RTooltip contentStyle={{ borderRadius: 12, border: "1px solid oklch(0.908 0.014 163)", fontSize: 13 }} />
+                  <RTooltip contentStyle={{ borderRadius: 12, border: "1px solid oklch(0.898 0.018 213)", fontSize: 13 }} />
                 </PieChart>
               </ResponsiveContainer>
             )}
@@ -229,6 +234,22 @@ function AdminOverview({ adminName }: { adminName: string }) {
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Consultation type</CardTitle>
+          <CardDescription>Share of non-cancelled appointments held online by video versus in person.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex h-3 overflow-hidden rounded-full bg-muted" role="img" aria-label={`${onlinePct}% online`}>
+            <div className="h-full bg-primary transition-all" style={{ width: `${onlinePct}%` }} />
+          </div>
+          <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-primary" /> Online · {onlineCount}</span>
+            <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/40" /> In person · {live.length - onlineCount}</span>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
@@ -714,7 +735,10 @@ function AllAppts() {
                       {a.reason || "—"}
                     </TableCell>
                     <TableCell>
-                      <StatusBadge status={a.status} />
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <StatusBadge status={a.status} />
+                        <ModeBadge mode={a.mode} />
+                      </div>
                     </TableCell>
                     <TableCell className="text-right pr-4">
                       {a.status === "booked" && (

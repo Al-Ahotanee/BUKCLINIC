@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { api, formatDatePlain, formatTime, relativeDay } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/site/logo";
-import { JitsiRoom } from "@/components/consultation/jitsi-room";
+import { JitsiRoom, type JitsiCfg } from "@/components/consultation/jitsi-room";
 
 interface Consultation {
   id: number;
@@ -19,7 +19,7 @@ interface Consultation {
   me: string;
   other_name: string;
   state: "early" | "open" | "ended";
-  room: string | null;
+  jitsi: JitsiCfg | null;
   opens_in_minutes: number | null;
 }
 
@@ -99,7 +99,7 @@ export default function CallPage({ params }: { params: Promise<{ id: string }> }
       />
     );
   } else {
-    body = <JitsiRoom room={c.room!} displayName={c.me} subject={`BUK Clinic consultation — ${c.other_name}`} onLeave={onLeave} />;
+    body = <JitsiRoom cfg={c.jitsi!} displayName={c.me} subject={`BUK Clinic consultation — ${c.other_name}`} onLeave={onLeave} />;
   }
 
   return (
@@ -117,6 +117,13 @@ export default function CallPage({ params }: { params: Promise<{ id: string }> }
           </span>
         </div>
       </header>
+      {c?.state === "open" && !left && c.jitsi?.provider === "public" && (
+        <p className="border-b bg-amber-50 px-4 py-2 text-center text-xs text-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+          {c.role === "doctor"
+            ? "The public Jitsi server may ask you to sign in once to start the room. After you join, the student is admitted automatically or from the lobby."
+            : "If you see a waiting message, the doctor has not started the room yet. You will be let in as soon as they join."}
+        </p>
+      )}
       <main className="min-h-0 flex-1 p-3 sm:p-4">{body}</main>
     </div>
   );

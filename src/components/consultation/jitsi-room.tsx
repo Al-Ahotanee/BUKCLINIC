@@ -3,8 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 
-// Free public Jitsi server by default; override with NEXT_PUBLIC_JITSI_DOMAIN to self-host.
-const DOMAIN = process.env.NEXT_PUBLIC_JITSI_DOMAIN || "meet.jit.si";
+export interface JitsiCfg {
+  provider: "jaas" | "public";
+  domain: string;
+  scriptSrc: string;
+  roomName: string;
+  jwt: string | null;
+}
 
 interface JitsiApi {
   dispose: () => void;
@@ -16,54 +21,42 @@ declare global {
   }
 }
 
-function loadScript(): Promise<void> {
+function loadScript(src: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    if (window.JitsiMeetExternalAPI) return resolve();
-    const existing = document.getElementById("jitsi-external-api") as HTMLScriptElement | null;
-    if (existing) {
-      existing.addEventListener("load", () => resolve());
-      existing.addEventListener("error", () => reject(new Error("load")));
-      return;
-    }
+    if (window.JitsiMeetExternalAPI && document.querySelector(`script[data-jitsi="${src}"]`)) return resolve();
+    // A different provider's script defines the same global: drop it before loading ours.
+    document.querySelectorAll("script[data-jitsi]").forEach((n) => n.remove());
+    window.JitsiMeetExternalAPI = undefined;
     const s = document.createElement("script");
-    s.id = "jitsi-external-api";
-    s.src = `https://${DOMAIN}/external_api.js`;
+    s.src = src;
     s.async = true;
+    s.dataset.jitsi = src;
     s.onload = () => resolve();
     s.onerror = () => reject(new Error("load"));
     document.body.appendChild(s);
   });
 }
 
-export function jitsiUrl(room: string) {
-  return `https://${DOMAIN}/${room}`;
+function directUrl(cfg: JitsiCfg) {
+  return `https://${cfg.domain}/${cfg.roomName}${cfg.jwt ? `?jwt=${cfg.jwt}` : ""}`;
 }
 
-export function JitsiRoom({
-  room,
-  displayName,
-  subject,
-  onLeave,
-}: {
-  room: string;
-  displayName: string;
-  subject: string;
-  onLeave?: () => void;
-}) {
+export function JitsiRoom({ cfg, displayName, subject, onLeave }: { cfg: JitsiCfg; displayName: string; subject: string; onLeave?: () => void }) {
   const host = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
 
   useEffect(() => {
     let api: JitsiApi | null = null;
     let cancelled = false;
-    loadScript()
+    loadScript(cfg.scriptSrc)
       .then(() => {
         if (cancelled || !host.current || !window.JitsiMeetExternalAPI) return;
-        api = new window.JitsiMeetExternalAPI(DOMAIN, {
-          roomName: room,
+        api = new window.JitsiMeetExternalAPI(cfg.domain, {
+          roomName: cfg.roomName,
           parentNode: host.current,
           width: "100%",
           height: "100%",
+          ...(cfg.jwt ? { jwt: cfg.jwt } : {}),
           userInfo: { displayName },
           configOverwrite: {
             subject,
@@ -88,13 +81,13 @@ export function JitsiRoom({
       cancelled = true;
       api?.dispose();
     };
-  }, [room, displayName, subject, onLeave]);
+  }, [cfg, displayName, subject, onLeave]);
 
   return (
     <div className="relative h-full w-full overflow-hidden rounded-2xl bg-slate-950">
       <div ref={host} className="h-full w-full" />
       {status === "loading" && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-300">
+        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-300">
           <Loader2 className="h-7 w-7 animate-spin" />
           <p className="text-sm">Connecting to secure consultation room…</p>
         </div>
@@ -103,7 +96,7 @@ export function JitsiRoom({
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center text-slate-200">
           <p className="font-semibold">Could not load the video service.</p>
           <p className="text-sm text-slate-400">Check your connection, then reload. You can also open the room directly:</p>
-          <a className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground" href={jitsiUrl(room)} target="_blank" rel="noreferrer">
+          <a className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground" href={directUrl(cfg)} target="_blank" rel="noreferrer">
             Open in a new tab
           </a>
         </div>

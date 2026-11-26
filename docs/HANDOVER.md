@@ -27,3 +27,8 @@ See the checklist in docs/TODO.md and `git log` for the latest completed batch.
 - Room name is generated at booking (appointments.room, unguessable). It is only returned by GET /api/consultations/[id] to the student/doctor on that appointment, inside the join window.
 - Public meet.jit.si may require a moderator login or limit embedded use; set NEXT_PUBLIC_JITSI_DOMAIN to a self-hosted Jitsi or JaaS-compatible domain if so.
 - Batch 5 done: chat "Start video call" button, polish, README. Remaining: verify on a deployed build with two accounts; optional extra polish (charts in admin dash).
+
+## Fixes after first deploy test (Nov 26)
+- Jitsi `membersOnly` error: public meet.jit.si makes the first person sign in as moderator. Added JaaS (8x8 free tier) support: `src/lib/jitsi.ts` signs an RS256 JWT server-side (doctor = moderator). Set JAAS_APP_ID, JAAS_KID, JAAS_PRIVATE_KEY in Vercel; without them it falls back to the public server with an on-screen hint.
+- 404s on /brand/buk-logo.png and buk-campus.jpg: official files were never committed (sandbox cannot reach buk.edu.ng). Added local SVG logo + campus illustration (placeholders, not the official crest) and pointed `src/lib/brand.ts` at them. To use official artwork: add PNG/JPG to public/brand and edit brand.ts.
+- Admin dashboard: charts retinted to BUK turquoise, new Consultation type card, Online badge in the all-appointments table.

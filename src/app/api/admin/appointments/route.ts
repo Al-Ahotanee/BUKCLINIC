@@ -8,7 +8,7 @@ export async function GET() {
   if (error) return error;
   const rows = await query(
     `SELECT a.id, to_char(a.appt_date,'YYYY-MM-DD') AS date, to_char(a.appt_time,'HH24:MI') AS time,
-            a.reason, a.status, s.name AS student_name, s.matric_no, d.name AS doctor_name
+            a.reason, a.status, a.mode, s.name AS student_name, s.matric_no, d.name AS doctor_name
      FROM appointments a
      JOIN users s ON s.id = a.student_id
      JOIN users d ON d.id = a.doctor_id

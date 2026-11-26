@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Bayero University Kano campus illustration">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0A5C73"/><stop offset=".55" stop-color="#0E8FAE"/><stop offset="1" stop-color="#9AE0EE"/></linearGradient>
+    <linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B6F8A"/><stop offset="1" stop-color="#07485C"/></linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <circle cx="1280" cy="190" r="110" fill="#fff" opacity=".18"/><circle cx="1280" cy="190" r="64" fill="#fff" opacity=".28"/>
+  <g fill="#fff" opacity=".35"><ellipse cx="300" cy="170" rx="150" ry="26"/><ellipse cx="420" cy="150" rx="90" ry="22"/><ellipse cx="920" cy="120" rx="140" ry="22"/></g>
+  <!-- far buildings -->
+  <g fill="#0A5C73" opacity=".55"><rect x="60" y="560" width="220" height="200"/><rect x="300" y="520" width="160" height="240"/><rect x="1150" y="540" width="260" height="220"/><rect x="1430" y="590" width="170" height="170"/></g>
+  <!-- main hall with dome -->
+  <g fill="url(#gr)">
+    <rect x="470" y="520" width="660" height="260"/>
+    <path d="M640 520a160 160 0 0 1 320 0Z"/>
+    <rect x="790" y="330" width="20" height="40"/>
+    <rect x="410" y="580" width="90" height="200"/><rect x="1100" y="580" width="90" height="200"/>
+  </g>
+  <path d="M640 520a160 160 0 0 1 320 0" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="4"/>
+  <g fill="#9AE0EE" opacity=".85">
+    <rect x="520" y="570" width="36" height="120" rx="18"/><rect x="600" y="570" width="36" height="120" rx="18"/><rect x="680" y="570" width="36" height="120" rx="18"/>
+    <rect x="884" y="570" width="36" height="120" rx="18"/><rect x="964" y="570" width="36" height="120" rx="18"/><rect x="1044" y="570" width="36" height="120" rx="18"/>
+    <rect x="760" y="600" width="80" height="180" rx="40"/>
+  </g>
+  <rect x="440" y="770" width="720" height="14" fill="#fff" opacity=".7"/>
+  <rect y="780" width="1600" height="120" fill="#07485C"/>
+  <path d="M700 900 770 784h60l70 116Z" fill="#fff" opacity=".25"/>
+  <g fill="#0B6F8A"><circle cx="150" cy="740" r="46"/><rect x="144" y="760" width="12" height="40"/><circle cx="1470" cy="730" r="54"/><rect x="1464" y="754" width="12" height="46"/></g>
+</svg>

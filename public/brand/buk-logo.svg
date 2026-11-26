@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" role="img" aria-label="Bayero University Kano">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14A6C8"/><stop offset="1" stop-color="#0A5C73"/></linearGradient></defs>
+  <path d="M60 4 112 20v48c0 34-22 56-52 68C30 124 8 102 8 68V20L60 4Z" fill="url(#g)"/>
+  <path d="M60 4 112 20v48c0 34-22 56-52 68C30 124 8 102 8 68V20L60 4Z" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="3" transform="translate(0 0) scale(.94) translate(3.8 4.2)"/>
+  <path d="M30 56c11-6 22-6 30 2 8-8 19-8 30-2v32c-11-6-22-6-30 2-8-8-19-8-30-2V56Z" fill="#fff"/>
+  <path d="M60 58v32" stroke="#0A5C73" stroke-width="2.5"/>
+  <path d="M80 22a15 15 0 1 0 0 26 12 12 0 1 1 0-26Z" fill="#fff"/>
+  <path d="m83 28 2.2 4.6 5 .6-3.7 3.4 1 5-4.5-2.5-4.5 2.5 1-5-3.7-3.4 5-.6L83 28Z" fill="#fff"/>
+  <path d="M34 108h52" stroke="#fff" stroke-opacity=".8" stroke-width="3" stroke-linecap="round"/>
+</svg>

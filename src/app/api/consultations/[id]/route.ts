@@ -1,6 +1,7 @@
 import { query } from "@/lib/db";
 import { requireRole, json, fail } from "@/lib/auth";
 import { nowLagos, toMin } from "@/lib/slots";
+import { buildJitsiConfig } from "@/lib/jitsi";
 
 export const dynamic = "force-dynamic";
 
@@ -74,9 +75,10 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     me: user!.name,
     other_name: user!.role === "student" ? a.doctor_name : a.student_name,
   };
-  if (finished) return json({ ...base, state: "ended", room: null, opens_in_minutes: null });
-  if (w.state === "early") return json({ ...base, state: "early", room: null, opens_in_minutes: w.minutes });
-  return json({ ...base, state: "open", room: a.room, opens_in_minutes: 0 });
+  if (finished) return json({ ...base, state: "ended", jitsi: null, opens_in_minutes: null });
+  if (w.state === "early") return json({ ...base, state: "early", jitsi: null, opens_in_minutes: w.minutes });
+  const jitsi = buildJitsiConfig(a.room, { id: user!.id, name: user!.name, moderator: user!.role === "doctor" });
+  return json({ ...base, state: "open", jitsi, opens_in_minutes: 0 });
 }
 
 // Doctor ends the consultation: marks the appointment completed.
