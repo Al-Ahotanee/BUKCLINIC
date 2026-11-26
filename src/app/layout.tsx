@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     "Book clinic appointments, reschedule, and message your doctor online. The official appointment platform of the Bayero University Kano Clinic.",
   keywords: ["Bayero University Clinic", "BUK Clinic", "appointment booking", "student health", "Kano", "university clinic"],
   authors: [{ name: "Bayero University Kano" }],
-  icons: { icon: "/icon.svg" },
+  icons: { icon: "/brand/buk-logo.png" },
   openGraph: {
     title: "Bayero University Clinic",
     description: "Skip the queue — book your clinic appointment online at Bayero University Kano.",

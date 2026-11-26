@@ -32,3 +32,6 @@ See the checklist in docs/TODO.md and `git log` for the latest completed batch.
 - Jitsi `membersOnly` error: public meet.jit.si makes the first person sign in as moderator. Added JaaS (8x8 free tier) support: `src/lib/jitsi.ts` signs an RS256 JWT server-side (doctor = moderator). Set JAAS_APP_ID, JAAS_KID, JAAS_PRIVATE_KEY in Vercel; without them it falls back to the public server with an on-screen hint.
 - 404s on /brand/buk-logo.png and buk-campus.jpg: official files were never committed (sandbox cannot reach buk.edu.ng). Added local SVG logo + campus illustration (placeholders, not the official crest) and pointed `src/lib/brand.ts` at them. To use official artwork: add PNG/JPG to public/brand and edit brand.ts.
 - Admin dashboard: charts retinted to BUK turquoise, new Consultation type card, Online badge in the all-appointments table.
+
+## Real BUK assets (Nov 26)
+- Real crest (public/brand/buk-logo.png, 80x80), aerial campus (buk-campus-aerial.jpg) and main building (buk-campus-building.jpg) supplied by the user are now in use; SVGs remain as fallbacks. Source images are only 474x266, so higher-resolution originals would look sharper. Favicon now uses the crest.

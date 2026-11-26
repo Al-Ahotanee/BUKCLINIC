@@ -297,7 +297,7 @@ export function Landing() {
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2">
           <div className="relative overflow-hidden rounded-2xl border shadow-xl shadow-primary/10">
             <BrandImage
-              sources={[BRAND.heroLocal, BRAND.heroRemote]}
+              sources={[BRAND.bandLocal, BRAND.bandRemote]}
               alt="Bayero University Kano campus"
               className="aspect-[4/3] w-full object-cover"
               fallback={<div className="aspect-[4/3] w-full bg-gradient-to-br from-primary to-primary/60" />}
