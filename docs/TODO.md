@@ -31,3 +31,5 @@ Legend: [x] done · [ ] pending · [~] in progress
 - [x] Messages: "Start video call" button inside thread
 - [x] Dashboard UI polish with BUK theme (turquoise header rule, stat card accent)
 - [x] README update, final HANDOVER update
+
+- [x] Pre-call camera & microphone test (call page, before the room opens)

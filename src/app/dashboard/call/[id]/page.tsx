@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { api, formatDatePlain, formatTime, relativeDay } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/site/logo";
+import { DeviceCheck } from "@/components/consultation/device-check";
 import { JitsiRoom, type JitsiCfg } from "@/components/consultation/jitsi-room";
 
 interface Consultation {
@@ -80,8 +81,14 @@ export default function CallPage({ params }: { params: Promise<{ id: string }> }
       <Notice
         icon={<CalendarClock className="h-7 w-7 text-primary" />}
         title="The room is not open yet"
-        desc={`Your consultation is ${relativeDay(c.date).toLowerCase()}, ${formatDatePlain(c.date)} at ${formatTime(c.time)}. The room opens 15 minutes before the slot${m ? ` (in about ${m >= 60 ? `${Math.floor(m / 60)} h ${m % 60} min` : `${m} min`})` : ""}. This page refreshes automatically.`}
+        desc={`Your consultation is ${relativeDay(c.date).toLowerCase()}, ${formatDatePlain(c.date)} at ${formatTime(c.time)}. The room opens 15 minutes before the slot${m ? ` (in about ${m >= 60 ? `${Math.floor(m / 60)} h ${m % 60} min` : `${m} min`})` : ""}. This page refreshes automatically. Use the time to check your camera and microphone.`}
         onBack={back}
+        action={
+          <div className="flex w-full flex-col items-center gap-3">
+            <DeviceCheck />
+            <Button variant="ghost" onClick={back}>Back to dashboard</Button>
+          </div>
+        }
       />
     );
   } else if (left) {
