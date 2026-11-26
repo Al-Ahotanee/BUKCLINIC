@@ -165,3 +165,37 @@
     color: transparent;
   }
 }
+
+/* Printing a prescription: show only the sheet, full width, with colours preserved. */
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+  body * {
+    visibility: hidden !important;
+  }
+  .rx-print-area,
+  .rx-print-area * {
+    visibility: visible !important;
+  }
+  .rx-print-area {
+    position: absolute !important;
+    inset: 0 auto auto 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .rx-hide-print {
+    display: none !important;
+  }
+  .rx-dialog {
+    position: static !important;
+    transform: none !important;
+    overflow: visible !important;
+    max-height: none !important;
+  }
+}

@@ -7,6 +7,7 @@ import {
   CalendarX2,
   CheckCircle2,
   Clock,
+  FileText,
   Loader2,
   MessageSquareText,
   Search,
@@ -34,6 +35,7 @@ import { EmptyState, StatCard } from "./stat-card";
 import { Messages } from "./messages";
 import { StatusBadge } from "./student-dash";
 import { JoinCallButton, ModeBadge } from "@/components/consultation/join-call-button";
+import { RecordSheet } from "@/components/consultation/record-sheet";
 import { cn } from "@/lib/utils";
 
 export type DoctorSection = "overview" | "appointments" | "messages";
@@ -161,6 +163,7 @@ function DocAppts() {
   const [filter, setFilter] = useState("upcoming");
   const [query, setQuery] = useState("");
   const [toCancel, setToCancel] = useState<Appointment | null>(null);
+  const [recordFor, setRecordFor] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(() => {
@@ -249,15 +252,22 @@ function DocAppts() {
                   </p>
                   {a.reason && <p className="mt-1 text-sm text-muted-foreground">“{a.reason}”</p>}
                 </div>
-                {a.status === "booked" && (
+                {a.status !== "cancelled" && (
                   <div className="flex flex-wrap gap-2 sm:ml-auto">
-                    <JoinCallButton id={a.id} mode={a.mode} status={a.status} />
-                    <Button size="sm" disabled={busy} onClick={() => act(a.id, "complete", "Marked as completed")}>
-                      <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" /> Complete
+                    <Button variant="outline" size="sm" onClick={() => setRecordFor(a.id)}>
+                      <FileText className="mr-1.5 h-3.5 w-3.5" /> {a.status === "completed" ? "View record" : "Consultation record"}
                     </Button>
-                    <Button variant="destructiveOutline" size="sm" disabled={busy} onClick={() => setToCancel(a)}>
-                      <CalendarX2 className="mr-1.5 h-3.5 w-3.5" /> Cancel
-                    </Button>
+                    {a.status === "booked" && <JoinCallButton id={a.id} mode={a.mode} status={a.status} />}
+                    {a.status === "booked" && (
+                      <>
+                        <Button size="sm" disabled={busy} onClick={() => act(a.id, "complete", "Marked as completed")}>
+                          <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" /> Complete
+                        </Button>
+                        <Button variant="destructiveOutline" size="sm" disabled={busy} onClick={() => setToCancel(a)}>
+                          <CalendarX2 className="mr-1.5 h-3.5 w-3.5" /> Cancel
+                        </Button>
+                      </>
+                    )}
                   </div>
                 )}
               </div>
@@ -265,6 +275,8 @@ function DocAppts() {
           ))}
         </div>
       )}
+
+      <RecordSheet appointmentId={recordFor} open={recordFor !== null} onOpenChange={(v) => !v && setRecordFor(null)} onSaved={load} />
 
       <AlertDialog open={!!toCancel} onOpenChange={(v) => !v && setToCancel(null)}>
         <AlertDialogContent>
